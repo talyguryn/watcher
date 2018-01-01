@@ -1,5 +1,5 @@
 from __future__ import print_function
-from watcher.config import DOMAINS, CODEXBOT_NOTIFICATIONS
+from config import DOMAINS, CODEXBOT_NOTIFICATIONS
 import urllib
 import urllib2
 
