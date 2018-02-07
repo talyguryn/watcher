@@ -20,7 +20,7 @@ def get_status(domain):
             
             try:
                 if domain['message']:
-                    message += "\n{}".format{domain['message']}
+                    message += "\n{}".format(domain['message'])
             except:
                 pass
             
