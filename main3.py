@@ -6,7 +6,8 @@ def send_message(text):
     data = {'message': text}
     requests.post(CODEXBOT_NOTIFICATIONS, data=data)
 
-def get_status(url):
+def get_status(domain):
+    url = domain['url']
     print('{} '.format(url), end='')
 
     try:
@@ -15,7 +16,15 @@ def get_status(url):
         print('{}'.format(code))
 
         if code != 200:
-            send_message('{} code on {}'.format(code, url))
+            message = "{} code on {}".format(code, url)
+            
+            try:
+                if domain['message']:
+                    message += "\n{}".format{domain['message']}
+            except:
+                pass
+            
+            send_message(message)
     except:
         print('Undefined error')
         code = 0
