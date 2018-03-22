@@ -1,45 +1,67 @@
-from __future__ import print_function
-from config import DOMAINS, CODEXBOT_NOTIFICATIONS
-import urllib
-import urllib2
+from config import DOMAINS, WEBHOOK
+import requests
+from requests.exceptions import SSLError, ConnectionError
+
+
+class NotOK(Exception):
+    pass
+
 
 def send_message(text):
-    url = CODEXBOT_NOTIFICATIONS
-    data = urllib.urlencode({'message': text})
-    req = urllib2.Request(url, data)
-    response = urllib2.urlopen(req)
+    url = WEBHOOK
+    data = {
+        'message': text,
+        'disable_web_page_preview': True
+    }
+    requests.post(url, data=data)
+
 
 def get_status(domain):
+    is_site_available = False
     url = domain['url']
-    
-    req = urllib2.Request(url)
-    print('{} '.format(url), end='')
 
     try:
-        response = urllib2.urlopen(req)
-        code = response.code
-        print('{}'.format(code))
-    except urllib2.URLError as e:
-        code = e.code
-        print('{} cause '.format(code), end='')
-        print(e.reason)
+        r = requests.get(url)
+        code = r.status_code
+        if code != 200:
+            raise NotOK(code)
 
-    if code != 200:
-        message = "{} code on {}".format(code, url)
-            
+        is_site_available = True
+
+    except NotOK as e:
+        print(e)
+        code = '{} code'.format(e)
+
+    except SSLError as e:
+        print(e)
+        code = 'SSL error'
+
+    except ConnectionError as e:
+        print(e)
+        code = 'Connection refused'
+
+    except Exception as e:
+        print(e)
+        code = 'Undefined error'
+
+    if not is_site_available:
+        message = "🚨 {} on {}".format(code, url)
+
         try:
             if domain['message']:
                 message += "\n{}".format(domain['message'])
         except:
             pass
-            
+
         send_message(message)
+
+    print('{} -> {}'.format(url, code))
 
     return code
 
 
-if not CODEXBOT_NOTIFICATIONS:
-    print('No CODEXBOT_NOTIFICATIONS link was found in config file.')
+if not WEBHOOK:
+    print('No WEBHOOK link was found in config file.')
     exit()
 
 for domain in DOMAINS:
