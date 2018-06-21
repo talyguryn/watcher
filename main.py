@@ -20,6 +20,9 @@ def get_status(domain):
     is_site_available = False
     url = domain['url']
 
+    load_time = None
+    page_size = None
+
     try:
         r = requests.get(url)
         code = r.status_code
@@ -27,6 +30,9 @@ def get_status(domain):
             raise NotOK(code)
 
         is_site_available = True
+
+        load_time = r.elapsed.total_seconds()
+        page_size = round(len(r.content) / 1024, 3)
 
     except NotOK as e:
         print(e)
@@ -56,6 +62,14 @@ def get_status(domain):
         send_message(message)
 
     print('{} -> {}'.format(url, code))
+
+    if load_time:
+        print('Time: {} s'.format(load_time))
+
+    if page_size:
+        print('Size: {} KB'.format(page_size))
+
+    print()
 
     return code
 
