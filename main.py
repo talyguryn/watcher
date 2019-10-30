@@ -11,7 +11,8 @@ def send_message(text):
     url = 'https://api.telegram.org/bot{}/sendMessage'.format(APITOKEN)
     data = {
         'text': text,
-        'chat_id': CHATID
+        'chat_id': CHATID,
+        'disable_web_page_preview': True
     }
     requests.post(url, json=data)
 
