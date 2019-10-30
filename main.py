@@ -1,4 +1,4 @@
-from config import DOMAINS, WEBHOOK
+from config import DOMAINS, APITOKEN, CHATID
 import requests
 from requests.exceptions import SSLError, ConnectionError
 
@@ -8,12 +8,13 @@ class NotOK(Exception):
 
 
 def send_message(text):
-    url = WEBHOOK
+    url = 'https://api.telegram.org/bot{}/sendMessage'.format(APITOKEN)
     data = {
-        'message': text,
+        'text': text,
+        'chat_id': CHATID,
         'disable_web_page_preview': True
     }
-    requests.post(url, data=data)
+    requests.post(url, json=data)
 
 
 def get_status(domain):
@@ -74,8 +75,8 @@ def get_status(domain):
     return code
 
 
-if not WEBHOOK:
-    print('No WEBHOOK link was found in config file.')
+if not APITOKEN:
+    print('No APITOKEN link was found in config file.')
     exit()
 
 for domain in DOMAINS:

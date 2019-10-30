@@ -3,5 +3,8 @@ DOMAINS = [
     { 'url': 'https://ifmo.su', 'message': '@guryn' }
 ]
 
-# Notifications link from https://t.me/wbhkbot
-WEBHOOK = ''
+# Telegram bot API Token
+APITOKEN = ''
+
+# Telegram Chat ID (obtain via https://api.telegram.org/bot<TOKEN>/getUpdates)
+CHATID = 0
