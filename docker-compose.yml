@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  python:
+    image: python:3-slim
+    command: sh -c "pip install --no-cache-dir -r requirements.txt && python main.py"
+    restart: on-failure
+    volumes:
+      - .:/usr/app
+    working_dir: /usr/app
